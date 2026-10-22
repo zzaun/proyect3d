@@ -1,6 +1,8 @@
 <h1>PROYECTO 3D. LLAMITA</h1>
 <p>Este proyecto busca crear una llamita usando las liberias: Py-OpengGL .GL .GLU .GLUT, Numpey, Pygame entre otras</p>
 
+<h2>Meshs</h2>
+
 # Liberias:
 - pip install PyOpenGL 
 - pip install glfw numpey pygame
