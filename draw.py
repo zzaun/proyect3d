@@ -1,98 +1,361 @@
-# meshs son los glutSolidMesh pero con parámetros extra
-from meshs import *
+# Liberias de apollo
+import numpy as np
 
-'''
-    Cube        =   Cubo
-    Cylinder    =   Cilindro
-    Plane       =   Plano
-    Teapot      =   Tetera
-    Sphere      =   Esfera
-    Cone        =   Cono
-    Torus       =   Dona
-    Tetrahedrion    =   Piramidre
-    Octahedron      =   Diamante
-    Dodecahedron    =   Esfera PS2  o Una papa
-    Icosahedron     =   Esfera PS1  o Un huevo a baja resolucion
-'''
-
-def paleta(color=0):
-    COLORES = {
-        "GRIS":   (0.5, 0.5, 0.5),
-        "NEGRO":  (0.1, 0.1, 0.1),
-        "BLANCO": (0.9, 0.9, 0.9),
-        "ROJO":   (0.7, 0.1, 0.1),
-        "VERDE":  (0.1, 0.7, 0.1),
-        "AZUL":   (0.1, 0.1, 0.7),
-        "MORADO": (0.5, 0.1, 0.5),
-        "NARANJA":(1.0, 0.5, 0.05),
-        "CAFE":   (0.35, 0.18, 0.08),
-        "BEIGE":  (0.95, 0.75, 0.55),
-        "AMARILLO_VERDE": (0.7, 0.85, 0.15),
-        "VERDE_OSCURO":   (0.08, 0.3, 0.15),
-        "JEANS":  (0.2, 0.45, 0.75),
-        "PAJA":   (0.85, 0.7, 0.3),
-        "MADERA": (0.5, 0.3, 0.12),
-        "ROSA":   (1.0, 0.45, 0.55),
-    }
-    # Acepta un nombre ("ROJO", "rojo"), un id (3) o una tupla (1, 0, 0)
-    if isinstance(color, str):
-        return COLORES.get(color.upper(), COLORES["GRIS"])
-
-    if isinstance(color, int):
-        valores = list(COLORES.values())
-        if 0 <= color < len(valores):
-            return valores[color]
-        return COLORES["GRIS"]
-
-    return color    # si ya es una tupla de color, se regresa tal cual
-
-def drawing():
-    light.sun()
-    ejes(visibleMallas=True, visibleEjes=True)
-    drawEjemple()
+# Librerías gráficas
+from OpenGL.GL import *  # Funciones principales de OpenGL (color, matrices, transformaciones).
+from OpenGL.GLU import *  # Funciones de utilidad de OpenGL (perspectiva, cuádricas).
+from OpenGL.GLUT import *  # Funciones de GLUT (ventana y figuras sólidas como glutSolidCube).
 
 
-def ejes(visibleMallas = True, visibleEjes = True):
-    auxScale = 0.005
-    tamaño = 20
-    if visibleEjes:
-        mesh.cube(name="ejeX", scale=(tamaño,auxScale,auxScale), color=(1,0,0))
-        mesh.cube(name="ejeZ", scale=(auxScale,tamaño,auxScale), color=(0,1,0))
-        mesh.cube(name="ejeY", scale=(auxScale,auxScale,tamaño), color=(0,0,1))
-    #Malla
-    salto = 0
-    auxScale = 0.0015
-    if visibleMallas:
-        for i in range(100):
-            mesh.cube(name="ejeX"+str(i), scale=(tamaño,auxScale,auxScale), translate=(0,0,-10 +salto),color=(0.8,0,0))
-            mesh.cube(name="ejeY"+str(i), scale=(auxScale,auxScale,tamaño), translate=(-10 +salto,0,0),color=(0,0,0.8))
-            salto += .2
+class mesh:
+    @staticmethod  # Indica que la función no necesita "self"; se llama directo desde la clase.
+    def cube(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cube", visible = True):  # Dibuja un cubo; size = lado, color = (R,G,B), translate = (x,y,z), rotate = (ángulo,x,y,z), scale = (x,y,z), name = nombre, visible = si se dibuja.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color; el * separa la tupla en 3 números (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: primer valor es el ángulo, los otros 3 son el eje.
+        glScalef(*scale)  # Cambia el tamaño en x, y, z (permite estirar o aplastar la figura).
+        glutSolidCube(size)  # Dibuja el cubo sólido con el lado indicado.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+    
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def cylinder(radio=1.0, altura=2.0, slices=32, stacks=1, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cylinder", visible = True):  # Dibuja un cilindro; radio = grosor, altura = largo, slices = lados, stacks = divisiones a lo largo.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidCylinder(radio, altura, slices, stacks)  # Dibuja el cilindro sólido con tapas (nace acostado sobre Z).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
 
-# ---------------------------------------------------------------------------
-# 1) Agrega estos colores AL FINAL de tu diccionario COLORES (así los ids
-#    anteriores no cambian):
-#
-#    "NARANJA":        (1.0, 0.5, 0.05),
-#    "CAFE":           (0.35, 0.18, 0.08),
-#    "BEIGE":          (0.95, 0.75, 0.55),
-#    "AMARILLO_VERDE": (0.7, 0.85, 0.15),
-#    "VERDE_OSCURO":   (0.08, 0.3, 0.15),
-#    "JEANS":          (0.2, 0.45, 0.75),
-#    "PAJA":           (0.85, 0.7, 0.3),
-#    "MADERA":         (0.5, 0.3, 0.12),
-#    "ROSA":           (1.0, 0.45, 0.55),
-#
-# 2) En main(), junto a glClearColor, usa el fondo naranja de la imagen:
-#
-#    glClearColor(1.0, 0.27, 0.0, 1.0)
-#
-# 3) Reemplaza tu función banca() por todo lo de abajo. drawing() no cambia.
-# ---------------------------------------------------------------------------
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def plane(ancho=1.0, largo=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "plane", visible = True):  # Dibuja un plano horizontal (como un piso); ancho = medida en X, largo = medida en Z.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glBegin(GL_QUADS)  # Empieza a dibujar un cuadrilátero con 4 vértices.
+        glNormal3f(0.0, 1.0, 0.0)  # La cara mira hacia arriba (+Y); la luz lo necesita para iluminarla.
+        glTexCoord2f(0.0, 0.0); glVertex3f(-ancho / 2, 0.0, -largo / 2)  # Esquina de atrás a la izquierda (con su coordenada de textura).
+        glTexCoord2f(1.0, 0.0); glVertex3f( ancho / 2, 0.0, -largo / 2)  # Esquina de atrás a la derecha.
+        glTexCoord2f(1.0, 1.0); glVertex3f( ancho / 2, 0.0,  largo / 2)  # Esquina de adelante a la derecha.
+        glTexCoord2f(0.0, 1.0); glVertex3f(-ancho / 2, 0.0,  largo / 2)  # Esquina de adelante a la izquierda.
+        glEnd()  # Termina el cuadrilátero.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+    
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def teapot(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "teapot", visible = True):  # Dibuja una tetera; size = tamaño, y los demás parámetros son los mismos que en cube.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidTeapot(size)  # Dibuja la tetera sólida con el tamaño indicado.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
 
-# def sumar(a, b):  # Suma dos posiciones (x, y, z); sirve para mover un personaje completo.
-#     return (a[0] + b[0], a[1] + b[1], a[2] + b[2])  # Regresa la nueva posición.
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def sphere(radio=1.0, slices=32, stacks=32, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "sphere", visible = True):  # Dibuja una esfera; radio = tamaño, slices = divisiones verticales, stacks = divisiones horizontales (más = más redonda).
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidSphere(radio, slices, stacks)  # Dibuja la esfera sólida con el radio y las divisiones indicadas.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
 
-def drawEjemple():  # Dibuja la banca y llama al resto de la escena.
-    # Ejemplos:
-    mesh.cube(translate=(0,2,0))
-    mesh.plane(scale=(4,1,4))
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def cone(base=1.0, altura=2.0, slices=32, stacks=8, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cone", visible = True):  # Dibuja un cono; base = radio de la base, altura = largo, slices = lados, stacks = divisiones a lo largo.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidCone(base, altura, slices, stacks)  # Dibuja el cono sólido (nace apuntando hacia +Z).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def torus(radio_interior=0.3, radio_exterior=1.0, lados=24, anillos=48, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "torus", visible = True):  # Dibuja un toro (dona); radio_interior = grosor del tubo, radio_exterior = distancia del centro al tubo, lados = divisiones del tubo, anillos = divisiones de la vuelta completa.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidTorus(radio_interior, radio_exterior, lados, anillos)  # Dibuja el toro sólido con los radios y divisiones indicados.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def tetrahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "tetrahedron", visible = True):  # Dibuja un tetraedro (4 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidTetrahedron()  # Dibuja el tetraedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def octahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "octahedron", visible = True):  # Dibuja un octaedro (8 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidOctahedron()  # Dibuja el octaedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def dodecahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "dodecahedron", visible = True):  # Dibuja un dodecaedro (12 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidDodecahedron()  # Dibuja el dodecaedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def icosahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "icosahedron", visible = True):  # Dibuja un icosaedro (20 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutSolidIcosahedron()  # Dibuja el icosaedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+class wire:
+    @staticmethod
+    def cube(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cube", visible = True):
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color; el * separa la tupla en 3 números (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: primer valor es el ángulo, los otros 3 son el eje.
+        glScalef(*scale)  # Cambia el tamaño en x, y, z (permite estirar o aplastar la figura).
+        glutWireCube(size)  # Dibuja el cubo sólido con el lado indicado.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def cylinder(radio=1.0, altura=2.0, slices=32, stacks=1, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cylinder", visible = True):  # Dibuja un cilindro; radio = grosor, altura = largo, slices = lados, stacks = divisiones a lo largo.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireCylinder(radio, altura, slices, stacks)  # Dibuja el cilindro sólido con tapas (nace acostado sobre Z).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def plane(ancho=1.0, largo=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "plane", visible = True):  # Dibuja un plano horizontal (como un piso); ancho = medida en X, largo = medida en Z.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glBegin(GL_QUADS)  # Empieza a dibujar un cuadrilátero con 4 vértices.
+        glNormal3f(0.0, 1.0, 0.0)  # La cara mira hacia arriba (+Y); la luz lo necesita para iluminarla.
+        glTexCoord2f(0.0, 0.0); glVertex3f(-ancho / 2, 0.0, -largo / 2)  # Esquina de atrás a la izquierda (con su coordenada de textura).
+        glTexCoord2f(1.0, 0.0); glVertex3f( ancho / 2, 0.0, -largo / 2)  # Esquina de atrás a la derecha.
+        glTexCoord2f(1.0, 1.0); glVertex3f( ancho / 2, 0.0,  largo / 2)  # Esquina de adelante a la derecha.
+        glTexCoord2f(0.0, 1.0); glVertex3f(-ancho / 2, 0.0,  largo / 2)  # Esquina de adelante a la izquierda.
+        glEnd()  # Termina el cuadrilátero.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+    
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def teapot(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "teapot", visible = True):  # Dibuja una tetera; size = tamaño, y los demás parámetros son los mismos que en cube.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireTeapot(size)  # Dibuja la tetera sólida con el tamaño indicado.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def sphere(radio=1.0, slices=32, stacks=32, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "sphere", visible = True):  # Dibuja una esfera; radio = tamaño, slices = divisiones verticales, stacks = divisiones horizontales (más = más redonda).
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireSphere(radio, slices, stacks)  # Dibuja la esfera sólida con el radio y las divisiones indicadas.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def cone(base=1.0, altura=2.0, slices=32, stacks=8, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cone", visible = True):  # Dibuja un cono; base = radio de la base, altura = largo, slices = lados, stacks = divisiones a lo largo.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireCone(base, altura, slices, stacks)  # Dibuja el cono sólido (nace apuntando hacia +Z).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def torus(radio_interior=0.3, radio_exterior=1.0, lados=24, anillos=48, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "torus", visible = True):  # Dibuja un toro (dona); radio_interior = grosor del tubo, radio_exterior = distancia del centro al tubo, lados = divisiones del tubo, anillos = divisiones de la vuelta completa.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireTorus(radio_interior, radio_exterior, lados, anillos)  # Dibuja el toro sólido con los radios y divisiones indicados.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def tetrahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "tetrahedron", visible = True):  # Dibuja un tetraedro (4 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireTetrahedron()  # Dibuja el tetraedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def octahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "octahedron", visible = True):  # Dibuja un octaedro (8 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireOctahedron()  # Dibuja el octaedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def dodecahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "dodecahedron", visible = True):  # Dibuja un dodecaedro (12 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireDodecahedron()  # Dibuja el dodecaedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def icosahedron(color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "icosahedron", visible = True):  # Dibuja un icosaedro (20 caras); no recibe tamaño, se cambia con scale.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        glutWireIcosahedron()  # Dibuja el icosaedro sólido (tamaño fijo).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        print(name)  # Imprime el nombre de la figura en la terminal.
+
+
+# # Cada cara: (normal, 4 vértices en sentido contrario a las manecillas, visto desde afuera)
+# _CARAS = [
+#     (( 0, 0, 1), [(-.2,-.5, .2), ( .2,-.5, .2), ( .5, .5, .5), (-.5, .5, .5)]),  # Frente.
+#     (( 0, 0,-1), [( .2,-.5,-.2), (-.2,-.5,-.2), (-.5, .5,-.5), ( .5, .5,-.5)]),  # Atrás.
+#     (( 1, 0, 0), [( .2,-.5, .2), ( .2,-.5,-.2), ( .5, .5,-.5), ( .5, .5, .5)]),  # Derecha.
+#     ((-1, 0, 0), [(-.2,-.5,-.2), (-.2,-.5, .2), (-.5, .5, .5), (-.5, .5,-.5)]),  # Izquierda.
+#     (( 0, 1, 0), [(-.5, .5, .5), ( .5, .5, .5), ( .5, .5,-.5), (-.5, .5,-.5)]),  # Arriba.
+#     (( 0,-1, 0), [(-.2,-.5,-.2), ( .2,-.5,-.2), ( .2,-.5, .2), (-.2,-.5, .2)]),  # Abajo.
+# ]
+
+# # Se crean UNA sola vez, al cargar el archivo.
+# VERTICES = np.array([v for _, vs in _CARAS for v in vs], dtype=np.float32)       # 24 vértices (x, y, z).
+# NORMALES = np.array([n for n, _ in _CARAS for _ in range(4)], dtype=np.float32)  # 1 normal por vértice.
+# INDICES  = np.arange(24, dtype=np.uint32)
+
+# class meshArray:
+
+#     @staticmethod
+#     def cube_array(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0)):
+#         glColor3f(*color)  # Asigna el color.
+#         glPushMatrix()  # Guarda la posición, giro y escala actuales.
+#         glTranslatef(*translate)  # Mueve la figura.
+#         glRotatef(*rotate)  # Gira la figura.
+#         glScalef(size * scale[0], size * scale[1], size * scale[2])  # Tamaño y escala juntos.
+
+#         glEnableClientState(GL_VERTEX_ARRAY)  # Avisa que los vértices vienen de un arreglo.
+#         glEnableClientState(GL_NORMAL_ARRAY)  # Avisa que las normales vienen de un arreglo.
+#         glVertexPointer(3, GL_FLOAT, 0, VERTICES)  # Apunta al arreglo de vértices (3 números cada uno).
+#         glNormalPointer(GL_FLOAT, 0, NORMALES)  # Apunta al arreglo de normales.
+#         glDrawElements(GL_QUADS, INDICES.size, GL_UNSIGNED_INT, INDICES)  # Dibuja todo el cubo en una sola llamada.
+#         glDisableClientState(GL_NORMAL_ARRAY)  # Apaga el arreglo de normales.
+#         glDisableClientState(GL_VERTEX_ARRAY)  # Apaga el arreglo de vértices.
+
+#         glPopMatrix()  # Restaura lo guardado.
+
+
+
+class light:
+    @staticmethod  # Se llama directo desde la clase: light.sun(...).
+    def sun(color=(1.0, 0.95, 0.8), ambient=(0.25, 0.25, 0.30), direction=(1.0, 2.0, 1.5), visible=True):  # color = luz directa (R,G,B), ambient = luz base (R,G,B), direction = hacia dónde está el sol (x,y,z), visible = enciende o apaga el sol.
+        if not visible:  # Revisa si el sol está apagado.
+            glDisable(GL_LIGHTING)  # Apaga todo el sistema de iluminación.
+            return  # Sale sin configurar nada más.
+        glEnable(GL_LIGHTING)  # Activa el sistema de iluminación.
+        glEnable(GL_LIGHT0)  # Enciende la luz número 0.
+        glEnable(GL_COLOR_MATERIAL)  # Hace que glColor3f siga funcionando con luz.
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)  # El color de glColor3f se usa como color del material.
+        glEnable(GL_NORMALIZE)  # Corrige las normales cuando usas glScalef.
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, (*color, 1.0))  # Luz directa; el 1.0 es la opacidad.
+        glLightfv(GL_LIGHT0, GL_AMBIENT, (*ambient, 1.0))  # Luz base: evita caras totalmente negras.
+        glLightfv(GL_LIGHT0, GL_POSITION, (*direction, 0.0))  # Dirección del sol; el 0.0 final lo hace direccional.
