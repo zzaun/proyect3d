@@ -6,6 +6,7 @@ from OpenGL.GL import *  # Funciones principales de OpenGL (color, matrices, tra
 from OpenGL.GLU import *  # Funciones de utilidad de OpenGL (perspectiva, cuádricas).
 from OpenGL.GLUT import *  # Funciones de GLUT (ventana y figuras sólidas como glutSolidCube).
 
+
 class mesh:
     @staticmethod  # Indica que la función no necesita "self"; se llama directo desde la clase.
     def cube(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cube", visible = True):  # Dibuja un cubo; size = lado, color = (R,G,B), translate = (x,y,z), rotate = (ángulo,x,y,z), scale = (x,y,z), name = nombre, visible = si se dibuja.
@@ -357,4 +358,3 @@ class light:
         glEnable(GL_NORMALIZE)  # Corrige las normales cuando usas glScalef.
         glLightfv(GL_LIGHT0, GL_DIFFUSE, (*color, 1.0))  # Luz directa; el 1.0 es la opacidad.
         glLightfv(GL_LIGHT0, GL_AMBIENT, (*ambient, 1.0))  # Luz base: evita caras totalmente negras.
-        glLightfv(GL_LIGHT0, GL_POSITION, (*direction, 0.0))  # Dirección del sol; el 0.0 final lo hace direccional.

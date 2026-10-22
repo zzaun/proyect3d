@@ -97,4 +97,3 @@ def drawEjemple():  # Dibuja la banca y llama al resto de la escena.
     # wire.cube(translate=(0,2,0))
     wire.dodecahedron(translate=(0,2,0))
     mesh.plane(scale=(4,1,4))
-
