@@ -26,3 +26,7 @@
 -   git remote add origin https://github.com/zzaun/proyect3d.git
  -  git branch -M main
 -   git push -u origin main
+
+
+## Para que no vuelva a pasar
+Haz commit antes de hacer pull, o usa *git pull --rebase* con el árbol de trabajo limpio. Los conflictos del autostash aparecen justo cuando haces pull con cambios sin commitear.
