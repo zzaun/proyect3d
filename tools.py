@@ -8,7 +8,10 @@ from OpenGL.GL import *  # Funciones principales de OpenGL (color, matrices, tra
 from OpenGL.GLU import *  # Funciones de utilidad de OpenGL (perspectiva, cuádricas).
 from OpenGL.GLUT import *  # Funciones de GLUT (ventana y figuras sólidas como glutSolidCube).
 
+# Paleta de colores para el sismtea interno:
 
+
+#   Mallas solidas
 class mesh:
     @staticmethod  # Indica que la función no necesita "self"; se llama directo desde la clase.
     def cube(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cube", visible = True):  # Dibuja un cubo; size = lado, color = (R,G,B), translate = (x,y,z), rotate = (ángulo,x,y,z), scale = (x,y,z), name = nombre, visible = si se dibuja.
@@ -159,7 +162,8 @@ class mesh:
         glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
         print(name)  # Imprime el nombre de la figura en la terminal.
 
-class wire:
+#   Mallas pero solo las aristas
+class meshWire:
     @staticmethod
     def cube(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name = "cube", visible = True):
         if not visible:  # Revisa si la figura está marcada como no visible.
@@ -309,26 +313,6 @@ class wire:
         glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
         print(name)  # Imprime el nombre de la figura en la terminal.
 
-class sysScene:
-    def ejes(visibleMallas = True, visibleEjes = True):
-        auxScale = 0.005
-        tamaño = 20
-        if visibleEjes:
-            mesh.cylinder(name="ejeX", radio=auxScale, scale=(1,1,50), translate=(0,0,-50), color=(1,0,0))
-            mesh.cone(name="FechaX", scale=(0.1, 0.1, 0.2), translate=(0,0,5), color=(1,0,0))
-            mesh.cylinder(name="ejeY", radio=auxScale, rotate=(-90, 0,90, 0), scale=(1,1,50), translate=(50,0,0), color=(0,1,0))
-            mesh.cone(name="FechaY", scale=(0.1, 0.1, 0.2), rotate=(-90, 0, -90, 0) ,translate=(5, 0, 0), color=(0,1,0))
-            mesh.cylinder(name="ejeZ", radio=auxScale, rotate=(-90, 90,0,0), altura=100, translate=(0,-50,0), color=(0,0,1))
-            mesh.cone(name="FechaZ", scale=(0.1, 0.1, 0.2), rotate=(-90, 90, 0, 0), translate=(0, 5, 0), color=(0,0,1))
-        #Malla
-        salto = 0
-        auxScale = 0.0015
-        if visibleMallas:
-            for i in range(100):
-                mesh.cube(name="ejeX"+str(i), scale=(tamaño,auxScale,auxScale), translate=(0,0,-10 +salto),color=(0.8,0,0))
-                mesh.cube(name="ejeY"+str(i), scale=(auxScale,auxScale,tamaño), translate=(-10 +salto,0,0),color=(0,0,0.8))
-                salto += .2
-
 #   MALLAS PERSONALIZADAS MAS O MENOS
 _quad = None  # Objeto de GLU que dibuja las figuras; se crea la primera vez que se necesita.
  
@@ -413,18 +397,34 @@ class meshQuad:  # Figuras redondeadas de GLU; se usan sin crear un objeto (mesh
         glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
         # print(name)  # Imprime el nombre (déjalo comentado: se ejecuta en cada cuadro).
  
-#Sonido
-
+##Sonido
 class audio:
+    _cache = {}  # Sonidos ya cargados, para no leer el archivo en cada fotograma.
+
     @staticmethod  # Se llama directo desde la clase: audio.backgroundMusic(...).
     def backgroundMusic(path="", volumen=0.5):  # path = archivo de audio (mp3, ogg, wav), volumen = de 0.0 a 1.0.
-        if not path:  # Si no se indicó archivo.
+        pathAudio = "rcs/" + path
+        if not pathAudio:  # Si no se indicó archivo.
             return  # No hace nada.
         pygame.mixer.init()  # Prepara el sistema de audio.
-        pygame.mixer.music.load(path)  # Carga el archivo.
+        pygame.mixer.music.load(pathAudio)  # Carga el archivo.
         pygame.mixer.music.set_volume(volumen)  # Ajusta el volumen.
         pygame.mixer.music.play(-1)  # Reproduce en bucle infinito (-1 = sin fin).
 
+    @staticmethod  # Se llama directo desde la clase: audio.sound(...).
+    def sound(path="", volumen=0.1, repetir=0):  # Efecto de sonido; path = archivo, volumen = de 0.0 a 1.0, repetir = veces extra que suena (0 = una sola vez).
+        pathAudio = "rcs/" + path
+        if not pathAudio:  # Si no se indicó archivo.
+            return  # No hace nada.
+        if not pygame.mixer.get_init():  # Si el sistema de audio todavía no está listo.
+            pygame.mixer.init()  # Lo prepara (así funciona aunque no haya música de fondo).
+        if pathAudio not in audio._cache:  # Si es la primera vez que se pide este archivo.
+            audio._cache[pathAudio] = pygame.mixer.Sound(pathAudio)  # Lo carga y lo guarda.
+        efecto = audio._cache[pathAudio]  # Toma el sonido guardado.
+        efecto.set_volume(volumen)  # Ajusta el volumen de este efecto.
+        efecto.play(loops=repetir)  # Lo reproduce encima de la música, sin cortarla.
+
+# Ilumuniacion
 class light:
     @staticmethod  # Se llama directo desde la clase: light.sun(...).
     def sun(color=(1.0, 0.95, 0.8), ambient=(0.25, 0.25, 0.30), direction=(1.0, 2.0, 1.5), visible=True):  # color = luz directa (R,G,B), ambient = luz base (R,G,B), direction = hacia dónde está el sol (x,y,z), visible = enciende o apaga el sol.
@@ -438,3 +438,72 @@ class light:
         glEnable(GL_NORMALIZE)  # Corrige las normales cuando usas glScalef.
         glLightfv(GL_LIGHT0, GL_DIFFUSE, (*color, 1.0))  # Luz directa; el 1.0 es la opacidad.
         glLightfv(GL_LIGHT0, GL_AMBIENT, (*ambient, 1.0))  # Luz base: evita caras totalmente negras.
+
+class sysScene:
+    def paleta(color=0):
+        COLORES = {
+            "GRIS": (0.3, 0.31, 0.33, 1.0),
+            "RED": (1.0, 0.0, 0.0),
+            "GREEN": (0.0, 2.0, 0.0),
+            "BLUE": (0.0, 0.0, 3.0)
+        }
+        # Acepta un nombre ("ROJO", "rojo"), un id (3) o una tupla (1, 0, 0)
+        if isinstance(color, str):
+            return COLORES.get(color.upper(), COLORES["GRIS"])
+
+        if isinstance(color, int):
+            valores = list(COLORES.values())
+            if 0 <= color < len(valores):
+                return valores[color]
+            return COLORES["GRIS"]
+        # si ya es una tupla de color, se regresa tal cual
+        return color
+    
+    #   Ejes
+    def ejes(visibleMallas = False, visibleEjes = True):
+        auxScale = 0.007
+        tamaño = 20
+        if visibleEjes:
+            #EJE Z
+            mesh.cylinder(name="EJE: Z", radio=auxScale, altura=50, rotate=convert.degrees(-90, 0, 0), translate=(0,-25,0), color=sysScene.paleta("GREEN"))
+            mesh.cone(name="DIRECT: Z", scale=(0.1, 0.1, 0.1), altura=2, rotate=convert.degrees(-90, 0, 0), translate=(0, 4, 0), color=sysScene.paleta("GREEN"))
+            #EJE X
+            mesh.cylinder(name="EJE: X", radio=auxScale, altura=50, rotate=convert.degrees(0, 90, 0), translate=(-25, 0, 0), color=sysScene.paleta("RED"))
+            mesh.cone(name="DIRECT: X", scale=(0.1, 0.1, 0.1), altura=2, rotate=convert.degrees(0, 90, 0), translate=(4, 0, 0), color=sysScene.paleta("RED"))
+            #EJE Y
+            mesh.cylinder(name="EJE: Y", radio=auxScale, altura=50, rotate=convert.degrees(0, 0, 0), translate=(0, 0, -25), color=sysScene.paleta("BLUE"))
+            mesh.cone(name="DIRECT: Y", scale=(0.1, 0.1, 0.1), altura=2, rotate=convert.degrees(0, 0, 0), translate=(0, 0, 4), color=sysScene.paleta("BLUE"))
+        #Malla
+        salto = 0
+        auxScale = 0.0015
+        if visibleMallas:
+            for i in range(100):
+                mesh.cube(name="ejeX"+str(i), scale=(tamaño,auxScale,auxScale), translate=(0,0,-10 +salto),color=sysScene.paleta("RED"))
+                mesh.cube(name="ejeY"+str(i), scale=(auxScale,auxScale,tamaño), translate=(-10 +salto,0,0),color=sysScene.paleta("BLUE"))
+                salto += .2
+
+class convert:
+    @staticmethod  # Se llama directo desde la clase: convert.degrees(...).
+    def degrees(x=0, y=0, z=0):  # Recibe el giro en X, Y y Z (en grados); devuelve (ángulo, x, y, z) para glRotatef.
+        def multiplicar(a, b):  # Combina dos giros (cuaterniones) en uno solo.
+            return (a[0]*b[0] - a[1]*b[1] - a[2]*b[2] - a[3]*b[3],  # Parte w del resultado.
+                    a[0]*b[1] + a[1]*b[0] + a[2]*b[3] - a[3]*b[2],  # Parte x.
+                    a[0]*b[2] - a[1]*b[3] + a[2]*b[0] + a[3]*b[1],  # Parte y.
+                    a[0]*b[3] + a[1]*b[2] - a[2]*b[1] + a[3]*b[0])  # Parte z.
+
+        rx, ry, rz = (math.radians(a) / 2 for a in (x, y, z))  # Pasa a radianes y toma la mitad de cada ángulo.
+        qx = (math.cos(rx), math.sin(rx), 0.0, 0.0)  # Giro solo en X.
+        qy = (math.cos(ry), 0.0, math.sin(ry), 0.0)  # Giro solo en Y.
+        qz = (math.cos(rz), 0.0, 0.0, math.sin(rz))  # Giro solo en Z.
+
+        q = multiplicar(qz, multiplicar(qy, qx))  # Combina: primero X, luego Y, luego Z.
+        if q[0] < 0:  # Un giro y su opuesto son equivalentes; se elige el de ángulo menor.
+            q = tuple(-v for v in q)  # Invierte los signos.
+
+        w = min(1.0, q[0])  # Evita errores de redondeo antes de acos.
+        resto = math.sqrt(1.0 - w * w)  # Tamaño de la parte que define el eje.
+        if resto < 1e-6:  # Si casi no hay giro.
+            return (0.0, 0.0, 1.0, 0.0)  # Regresa "sin giro" (eje válido, ángulo 0).
+
+        grados = math.degrees(2.0 * math.acos(w))  # Ángulo total del giro combinado.
+        return (grados, q[1] / resto, q[2] / resto, q[3] / resto)  # (ángulo, x, y, z).

@@ -1,14 +1,11 @@
-# Multiplataforma (evita problemas de GLUT en Wayland)
+# Liberias para multiplataforma (evita problemas de GLUT en Wayland)
 import os
 os.environ["PYOPENGL_PLATFORM"] = "x11"
 
+# Liberias del sistema
 import sys, importlib, traceback  # Para recargar los archivos cuando se guardan.
 
-# Librerías gráficas
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
-# draw es donde se dibuja todo
+# scene: es donde se crea la escena
 from scene import *  # Trae los demás nombres (audio, mesh, etc.).
 import scene  # Se usa como draw.drawingScene() para que se pueda recargar.
 
@@ -22,7 +19,7 @@ import scene  # Se usa como draw.drawingScene() para que se pueda recargar.
 size = (1000, 700)
 fps = 12  # Fotogramas por segundo máximos.
 titleWindows = "Windows OpenGL .GL .GLU .GLUT Goofy"
-backgraung = (1.0, 0.5, 0.05, 1)
+backgraung = sysScene.paleta(0)
 carpeta = os.path.dirname(os.path.abspath(__file__))  # Carpeta del proyecto.
 
 def firma():  # Fecha de la última modificación de los .py de la carpeta.
@@ -106,3 +103,17 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
