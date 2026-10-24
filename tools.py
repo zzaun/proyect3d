@@ -1,5 +1,7 @@
 # Liberias de apollo
 import numpy as np
+import math  # Para seno, coseno y conversiones de ángulos.
+import pygame  # Librería para el audio.
 
 # Librerías gráficas
 from OpenGL.GL import *  # Funciones principales de OpenGL (color, matrices, transformaciones).
@@ -307,43 +309,121 @@ class wire:
         glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
         print(name)  # Imprime el nombre de la figura en la terminal.
 
+class sysScene:
+    def ejes(visibleMallas = True, visibleEjes = True):
+        auxScale = 0.005
+        tamaño = 20
+        if visibleEjes:
+            mesh.cylinder(name="ejeX", radio=auxScale, scale=(1,1,50), translate=(0,0,-50), color=(1,0,0))
+            mesh.cone(name="FechaX", scale=(0.1, 0.1, 0.2), translate=(0,0,5), color=(1,0,0))
+            mesh.cylinder(name="ejeY", radio=auxScale, rotate=(-90, 0,90, 0), scale=(1,1,50), translate=(50,0,0), color=(0,1,0))
+            mesh.cone(name="FechaY", scale=(0.1, 0.1, 0.2), rotate=(-90, 0, -90, 0) ,translate=(5, 0, 0), color=(0,1,0))
+            mesh.cylinder(name="ejeZ", radio=auxScale, rotate=(-90, 90,0,0), altura=100, translate=(0,-50,0), color=(0,0,1))
+            mesh.cone(name="FechaZ", scale=(0.1, 0.1, 0.2), rotate=(-90, 90, 0, 0), translate=(0, 5, 0), color=(0,0,1))
+        #Malla
+        salto = 0
+        auxScale = 0.0015
+        if visibleMallas:
+            for i in range(100):
+                mesh.cube(name="ejeX"+str(i), scale=(tamaño,auxScale,auxScale), translate=(0,0,-10 +salto),color=(0.8,0,0))
+                mesh.cube(name="ejeY"+str(i), scale=(auxScale,auxScale,tamaño), translate=(-10 +salto,0,0),color=(0,0,0.8))
+                salto += .2
 
-# # Cada cara: (normal, 4 vértices en sentido contrario a las manecillas, visto desde afuera)
-# _CARAS = [
-#     (( 0, 0, 1), [(-.2,-.5, .2), ( .2,-.5, .2), ( .5, .5, .5), (-.5, .5, .5)]),  # Frente.
-#     (( 0, 0,-1), [( .2,-.5,-.2), (-.2,-.5,-.2), (-.5, .5,-.5), ( .5, .5,-.5)]),  # Atrás.
-#     (( 1, 0, 0), [( .2,-.5, .2), ( .2,-.5,-.2), ( .5, .5,-.5), ( .5, .5, .5)]),  # Derecha.
-#     ((-1, 0, 0), [(-.2,-.5,-.2), (-.2,-.5, .2), (-.5, .5, .5), (-.5, .5,-.5)]),  # Izquierda.
-#     (( 0, 1, 0), [(-.5, .5, .5), ( .5, .5, .5), ( .5, .5,-.5), (-.5, .5,-.5)]),  # Arriba.
-#     (( 0,-1, 0), [(-.2,-.5,-.2), ( .2,-.5,-.2), ( .2,-.5, .2), (-.2,-.5, .2)]),  # Abajo.
-# ]
+#   MALLAS PERSONALIZADAS MAS O MENOS
+_quad = None  # Objeto de GLU que dibuja las figuras; se crea la primera vez que se necesita.
+ 
+# Traducción de los textos que usa la clase a las constantes de GLU.
+_ESTILOS = {"solido": GLU_FILL, "alambre": GLU_LINE, "puntos": GLU_POINT, "silueta": GLU_SILHOUETTE}  # Cómo se dibuja la malla.
+_NORMALES = {"suaves": GLU_SMOOTH, "planas": GLU_FLAT}  # Suaves = figura lisa, planas = aspecto facetado.
+ 
+def _preparar(estilo, normales, textura, adentro):  # Configura el objeto de GLU antes de dibujar.
+    global _quad  # Permite guardar el objeto en la variable de arriba.
+    if _quad is None:  # Si todavía no existe el objeto de GLU.
+        _quad = gluNewQuadric()  # Lo crea (una sola vez).
+    gluQuadricDrawStyle(_quad, _ESTILOS.get(estilo, GLU_FILL))  # Sólido, alambre, puntos o silueta.
+    gluQuadricNormals(_quad, _NORMALES.get(normales, GLU_SMOOTH))  # Normales suaves o planas (para la luz).
+    gluQuadricTexture(_quad, GL_TRUE if textura else GL_FALSE)  # Genera (o no) coordenadas de textura.
+    gluQuadricOrientation(_quad, GLU_INSIDE if adentro else GLU_OUTSIDE)  # Normales hacia adentro o hacia afuera.
 
-# # Se crean UNA sola vez, al cargar el archivo.
-# VERTICES = np.array([v for _, vs in _CARAS for v in vs], dtype=np.float32)       # 24 vértices (x, y, z).
-# NORMALES = np.array([n for n, _ in _CARAS for _ in range(4)], dtype=np.float32)  # 1 normal por vértice.
-# INDICES  = np.arange(24, dtype=np.uint32)
+class meshQuad:  # Figuras redondeadas de GLU; se usan sin crear un objeto (meshQuad.tube(...)).
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def tube(radio_base=0.25, radio_tope=0.15, altura=1.0, slices=16, stacks=4, tapas=False, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name="tube", visible=True, estilo="solido", normales="suaves", textura=False, adentro=False):  # Cilindro con un radio en cada extremo; con radio_tope = 0 es un cono; tapas = cierra los extremos con discos.
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        _preparar(estilo, normales, textura, adentro)  # Configura estilo, normales, textura y orientación.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        gluCylinder(_quad, radio_base, radio_tope, altura, slices, stacks)  # Dibuja el tubo (nace sobre Z y sube hasta "altura").
+        if tapas:  # Si se pidió cerrar los extremos.
+            if radio_base > 0:  # La base solo se tapa si tiene radio.
+                glPushMatrix()  # Guarda la posición actual para la tapa de abajo.
+                glRotatef(180, 1, 0, 0)  # Voltea el disco para que mire hacia afuera (hacia atrás).
+                gluDisk(_quad, 0, radio_base, slices, 1)  # Dibuja la tapa de abajo.
+                glPopMatrix()  # Restaura lo guardado.
+            if radio_tope > 0:  # El tope solo se tapa si tiene radio (un cono no lo necesita).
+                glPushMatrix()  # Guarda la posición actual para la tapa de arriba.
+                glTranslatef(0, 0, altura)  # Sube hasta el extremo del tubo.
+                gluDisk(_quad, 0, radio_tope, slices, 1)  # Dibuja la tapa de arriba.
+                glPopMatrix()  # Restaura lo guardado.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        # print(name)  # Imprime el nombre (déjalo comentado: se ejecuta en cada cuadro).
+ 
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def disk(radio_interior=0.0, radio_exterior=1.0, slices=32, loops=1, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name="disk", visible=True, estilo="solido", normales="suaves", textura=False, adentro=False):  # Disco plano; con radio_interior > 0 es una arandela (anillo).
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        _preparar(estilo, normales, textura, adentro)  # Configura estilo, normales, textura y orientación.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        gluDisk(_quad, radio_interior, radio_exterior, slices, loops)  # Dibuja el disco (nace en el plano XY, mirando hacia +Z).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        # print(name)  # Imprime el nombre (déjalo comentado: se ejecuta en cada cuadro).
+ 
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def partialDisk(radio_interior=0.0, radio_exterior=1.0, slices=32, loops=1, inicio=0.0, barrido=90.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name="partialDisk", visible=True, estilo="solido", normales="suaves", textura=False, adentro=False):  # Parte de un disco; inicio y barrido van en grados (0 = hacia arriba, y avanza hacia la derecha).
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        _preparar(estilo, normales, textura, adentro)  # Configura estilo, normales, textura y orientación.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z.
+        gluPartialDisk(_quad, radio_interior, radio_exterior, slices, loops, inicio, barrido)  # Dibuja solo la parte del disco indicada.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        # print(name)  # Imprime el nombre (déjalo comentado: se ejecuta en cada cuadro).
+ 
+    @staticmethod  # La función se llama directo desde la clase, sin "self".
+    def sphere(radio=1.0, slices=32, stacks=32, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0), name="sphere", visible=True, estilo="solido", normales="suaves", textura=False, adentro=False):  # Esfera; con pocos slices y stacks se ve facetada (de bajo polígono).
+        if not visible:  # Revisa si la figura está marcada como no visible.
+            return  # Sale de la función sin dibujar nada.
+        _preparar(estilo, normales, textura, adentro)  # Configura estilo, normales, textura y orientación.
+        glColor3f(*color)  # Asigna el color (R, G, B).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glTranslatef(*translate)  # Mueve la figura a la posición (x, y, z).
+        glRotatef(*rotate)  # Gira la figura: (ángulo, x, y, z).
+        glScalef(*scale)  # Cambia el tamaño en x, y, z (aplasta o estira la esfera).
+        gluSphere(_quad, radio, slices, stacks)  # Dibuja la esfera con el radio y las divisiones indicadas.
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
+        # print(name)  # Imprime el nombre (déjalo comentado: se ejecuta en cada cuadro).
+ 
+#Sonido
 
-# class meshArray:
-
-#     @staticmethod
-#     def cube_array(size=1.0, color=(0.5, 0.5, 0.5), translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0, 1.0)):
-#         glColor3f(*color)  # Asigna el color.
-#         glPushMatrix()  # Guarda la posición, giro y escala actuales.
-#         glTranslatef(*translate)  # Mueve la figura.
-#         glRotatef(*rotate)  # Gira la figura.
-#         glScalef(size * scale[0], size * scale[1], size * scale[2])  # Tamaño y escala juntos.
-
-#         glEnableClientState(GL_VERTEX_ARRAY)  # Avisa que los vértices vienen de un arreglo.
-#         glEnableClientState(GL_NORMAL_ARRAY)  # Avisa que las normales vienen de un arreglo.
-#         glVertexPointer(3, GL_FLOAT, 0, VERTICES)  # Apunta al arreglo de vértices (3 números cada uno).
-#         glNormalPointer(GL_FLOAT, 0, NORMALES)  # Apunta al arreglo de normales.
-#         glDrawElements(GL_QUADS, INDICES.size, GL_UNSIGNED_INT, INDICES)  # Dibuja todo el cubo en una sola llamada.
-#         glDisableClientState(GL_NORMAL_ARRAY)  # Apaga el arreglo de normales.
-#         glDisableClientState(GL_VERTEX_ARRAY)  # Apaga el arreglo de vértices.
-
-#         glPopMatrix()  # Restaura lo guardado.
-
-
+class audio:
+    @staticmethod  # Se llama directo desde la clase: audio.backgroundMusic(...).
+    def backgroundMusic(path="", volumen=0.5):  # path = archivo de audio (mp3, ogg, wav), volumen = de 0.0 a 1.0.
+        if not path:  # Si no se indicó archivo.
+            return  # No hace nada.
+        pygame.mixer.init()  # Prepara el sistema de audio.
+        pygame.mixer.music.load(path)  # Carga el archivo.
+        pygame.mixer.music.set_volume(volumen)  # Ajusta el volumen.
+        pygame.mixer.music.play(-1)  # Reproduce en bucle infinito (-1 = sin fin).
 
 class light:
     @staticmethod  # Se llama directo desde la clase: light.sun(...).
