@@ -17,7 +17,7 @@ import scene  # Se usa como draw.drawingScene() para que se pueda recargar.
 '''
 # Parámetros de configuración
 size = (1000, 700)
-fps = 12  # Fotogramas por segundo máximos.
+fps = 8  # Fotogramas por segundo máximos.
 titleWindows = "Windows OpenGL .GL .GLU .GLUT Goofy"
 backgraung = sysScene.paleta(0)
 carpeta = os.path.dirname(os.path.abspath(__file__))  # Carpeta del proyecto.
