@@ -1,3 +1,4 @@
+#scene.py
 # meshs son los glutSolidMesh pero con parámetros extra
 from tools import *
 
@@ -153,6 +154,7 @@ def drawEjemple():
 
  
 class fotogramas:
+    #--------TOMANDO EL AGUA--------
     # Animación: el cuello sigue a la cabeza con una ligera curva y la cabeza baja con el hocico a 45°. f0 = inicio, f12 = final.
     def f0():
         #Cuello
@@ -258,6 +260,319 @@ class fotogramas:
         cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
         #Cabeza
         cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+    
+    #--------BEBIENDO AGUA---------
+    def f13():  # Final
+            #Cuello
+            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+            #Cabeza
+            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+    def f14():  # Final
+            #Cuello
+            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+            #Cabeza
+            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+    def f15():  # Final
+            #Cuello
+            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+            #Cabeza
+            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+    def f16():  # Final
+            #Cuello
+            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+            #Cabeza
+            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+    
+    #---------HACIA ATRAS----------
+    def f17():  # Final (antes f12)
+        # Cuello*
+        cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+        cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+        cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+        cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+        # Cabeza*
+        cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+
+    def f18():  # 11/12 del recorrido (antes f11)
+        # Cuello*
+        cuello0(translate=(-0.303, -0.11, 0.0), rotate=(0.0, 0.0, 53.958))
+        cuello1(translate=(-0.578, -0.414, 0.0), rotate=(0.0, 0.0, 63.914))
+        cuello2(translate=(-0.87, -0.784, 0.0), rotate=(0.0, 0.0, 73.404))
+        cuello3(translate=(-1.143, -1.198, 0.0), rotate=(0.0, 0.0, 76.217))
+        # Cabeza*
+        cabeza(translate=(-1.347, -1.668, 0.0), hocico=41.25)
+
+    def f19():  # 10/12 del recorrido (antes f10)
+        # Cuello*
+        cuello0(translate=(-0.275, -0.1, 0.0), rotate=(0.0, 0.0, 50.316))
+        cuello1(translate=(-0.519, -0.382, 0.0), rotate=(0.0, 0.0, 59.426))
+        cuello2(translate=(-0.784, -0.721, 0.0), rotate=(0.0, 0.0, 68.076))
+        cuello3(translate=(-1.036, -1.096, 0.0), rotate=(0.0, 0.0, 70.088))
+        # Cabeza*
+        cabeza(translate=(-1.225, -1.517, 0.0), hocico=37.5)
+
+    def f20():  # 9/12 del recorrido (antes f9)
+        # Cuello*
+        cuello0(translate=(-0.247, -0.09, 0.0), rotate=(0.0, 0.0, 46.073))
+        cuello1(translate=(-0.462, -0.35, 0.0), rotate=(0.0, 0.0, 54.337))
+        cuello2(translate=(-0.7, -0.657, 0.0), rotate=(0.0, 0.0, 62.147))
+        cuello3(translate=(-0.93, -0.993, 0.0), rotate=(0.0, 0.0, 63.357))
+        # Cabeza*
+        cabeza(translate=(-1.102, -1.365, 0.0), hocico=33.75)
+
+    def f21():  # 8/12 del recorrido (antes f8)
+        # Cuello*
+        cuello0(translate=(-0.22, -0.08, 0.0), rotate=(0.0, 0.0, 41.268))
+        cuello1(translate=(-0.407, -0.316, 0.0), rotate=(0.0, 0.0, 48.685))
+        cuello2(translate=(-0.618, -0.592, 0.0), rotate=(0.0, 0.0, 55.656))
+        cuello3(translate=(-0.826, -0.89, 0.0), rotate=(0.0, 0.0, 56.065))
+        # Cabeza*
+        cabeza(translate=(-0.98, -1.213, 0.0), hocico=30.0)
+
+    def f22():  # 7/12 del recorrido (antes f7)
+        # Cuello*
+        cuello0(translate=(-0.192, -0.07, 0.0), rotate=(0.0, 0.0, 36.002))
+        cuello1(translate=(-0.353, -0.281, 0.0), rotate=(0.0, 0.0, 42.574))
+        cuello2(translate=(-0.539, -0.525, 0.0), rotate=(0.0, 0.0, 48.704))
+        cuello3(translate=(-0.724, -0.785, 0.0), rotate=(0.0, 0.0, 48.311))
+        # Cabeza*
+        cabeza(translate=(-0.858, -1.062, 0.0), hocico=26.25)
+
+    def f23():  # 6/12 del recorrido (antes f6)
+        # Cuello*
+        cuello0(translate=(-0.165, -0.06, 0.0), rotate=(0.0, 0.0, 30.444))
+        cuello1(translate=(-0.3, -0.245, 0.0), rotate=(0.0, 0.0, 36.17))
+        cuello2(translate=(-0.461, -0.456, 0.0), rotate=(0.0, 0.0, 41.461))
+        cuello3(translate=(-0.624, -0.679, 0.0), rotate=(0.0, 0.0, 40.267))
+        # Cabeza*
+        cabeza(translate=(-0.735, -0.91, 0.0), hocico=22.5)
+
+    def f24():  # 5/12 del recorrido (antes f5)
+        # Cuello*
+        cuello0(translate=(-0.137, -0.05, 0.0), rotate=(0.0, 0.0, 24.814))
+        cuello1(translate=(-0.249, -0.208, 0.0), rotate=(0.0, 0.0, 29.694))
+        cuello2(translate=(-0.385, -0.386, 0.0), rotate=(0.0, 0.0, 34.145))
+        cuello3(translate=(-0.525, -0.573, 0.0), rotate=(0.0, 0.0, 32.149))
+        # Cabeza*
+        cabeza(translate=(-0.613, -0.758, 0.0), hocico=18.75)
+
+    def f25():  # 4/12 del recorrido (antes f4)
+        # Cuello*
+        cuello0(translate=(-0.11, -0.04, 0.0), rotate=(0.0, 0.0, 19.341))
+        cuello1(translate=(-0.199, -0.17, 0.0), rotate=(0.0, 0.0, 23.375))
+        cuello2(translate=(-0.312, -0.315, 0.0), rotate=(0.0, 0.0, 26.986))
+        cuello3(translate=(-0.428, -0.465, 0.0), rotate=(0.0, 0.0, 24.189))
+        # Cabeza*
+        cabeza(translate=(-0.49, -0.607, 0.0), hocico=15.0)
+
+    def f26():  # 3/12 del recorrido (antes f3)
+        # Cuello*
+        cuello0(translate=(-0.082, -0.03, 0.0), rotate=(0.0, 0.0, 14.231))
+        cuello1(translate=(-0.151, -0.131, 0.0), rotate=(0.0, 0.0, 17.419))
+        cuello2(translate=(-0.24, -0.242, 0.0), rotate=(0.0, 0.0, 20.19))
+        cuello3(translate=(-0.332, -0.356, 0.0), rotate=(0.0, 0.0, 16.591))
+        # Cabeza*
+        cabeza(translate=(-0.367, -0.455, 0.0), hocico=11.25)
+
+    def f27():  # 2/12 del recorrido (antes f2)
+        # Cuello*
+        cuello0(translate=(-0.055, -0.02, 0.0), rotate=(0.0, 0.0, 9.626))
+        cuello1(translate=(-0.104, -0.09, 0.0), rotate=(0.0, 0.0, 11.968))
+        cuello2(translate=(-0.171, -0.168, 0.0), rotate=(0.0, 0.0, 13.899))
+        cuello3(translate=(-0.238, -0.246, 0.0), rotate=(0.0, 0.0, 9.499))
+        # Cabeza*
+        cabeza(translate=(-0.245, -0.303, 0.0), hocico=7.5)
+
+    def f28():  # 1/12 del recorrido (antes f1)
+        # Cuello*
+        cuello0(translate=(-0.028, -0.01, 0.0), rotate=(0.0, 0.0, 5.605))
+        cuello1(translate=(-0.058, -0.049, 0.0), rotate=(0.0, 0.0, 7.101))
+        cuello2(translate=(-0.104, -0.093, 0.0), rotate=(0.0, 0.0, 8.193))
+        cuello3(translate=(-0.146, -0.135, 0.0), rotate=(0.0, 0.0, 2.991))
+        # Cabeza*
+        cabeza(translate=(-0.123, -0.152, 0.0), hocico=3.75)
+
+    def f29():  # Estado inicial (antes f0)
+        # Cuello*
+        cuello0(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello1(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello2(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello3(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        # Cabeza*
+        cabeza()
+
+        #---------CARGA (hacia atrás, arranca lento y acelera)----------
+    def f30():  # carga 1/8
+        #Cuello
+        cuello0(translate=(0.009, 0.001, 0.0), rotate=(0.0, 0.0, -1.773))
+        cuello1(translate=(0.017, 0.003, 0.0), rotate=(0.0, 0.0, -2.092))
+        cuello2(translate=(0.027, 0.005, 0.0), rotate=(0.0, 0.0, -2.391))
+        cuello3(translate=(0.035, 0.008, 0.0), rotate=(0.0, 0.0, -2.409))
+        #Cabeza
+        cabeza(translate=(0.042, 0.010, 0.0), hocico=0.0)
+    def f31():  # carga 2/8
+        #Cuello
+        cuello0(translate=(0.034, 0.003, 0.0), rotate=(0.0, 0.0, -6.448))
+        cuello1(translate=(0.064, 0.010, 0.0), rotate=(0.0, 0.0, -7.607))
+        cuello2(translate=(0.097, 0.018, 0.0), rotate=(0.0, 0.0, -8.696))
+        cuello3(translate=(0.129, 0.028, 0.0), rotate=(0.0, 0.0, -8.760))
+        #Cabeza
+        cabeza(translate=(0.153, 0.038, 0.0), hocico=0.0)
+    def f32():  # carga 3/8
+        #Cuello
+        cuello0(translate=(0.070, 0.005, 0.0), rotate=(0.0, 0.0, -13.057))
+        cuello1(translate=(0.129, 0.020, 0.0), rotate=(0.0, 0.0, -15.404))
+        cuello2(translate=(0.196, 0.037, 0.0), rotate=(0.0, 0.0, -17.610))
+        cuello3(translate=(0.261, 0.056, 0.0), rotate=(0.0, 0.0, -17.739))
+        #Cabeza
+        cabeza(translate=(0.310, 0.077, 0.0), hocico=0.0)
+    def f33():  # carga 4/8
+        #Cuello
+        cuello0(translate=(0.110, 0.008, 0.0), rotate=(0.0, 0.0, -20.634))
+        cuello1(translate=(0.203, 0.032, 0.0), rotate=(0.0, 0.0, -24.343))
+        cuello2(translate=(0.309, 0.059, 0.0), rotate=(0.0, 0.0, -27.828))
+        cuello3(translate=(0.413, 0.089, 0.0), rotate=(0.0, 0.0, -28.032))
+        #Cabeza
+        cabeza(translate=(0.490, 0.121, 0.0), hocico=0.0)
+    def f34():  # carga 5/8
+        #Cuello
+        cuello0(translate=(0.150, 0.011, 0.0), rotate=(0.0, 0.0, -28.211))
+        cuello1(translate=(0.278, 0.043, 0.0), rotate=(0.0, 0.0, -33.281))
+        cuello2(translate=(0.422, 0.081, 0.0), rotate=(0.0, 0.0, -38.046))
+        cuello3(translate=(0.565, 0.122, 0.0), rotate=(0.0, 0.0, -38.326))
+        #Cabeza
+        cabeza(translate=(0.670, 0.166, 0.0), hocico=0.0)
+    def f35():  # carga 6/8
+        #Cuello
+        cuello0(translate=(0.186, 0.013, 0.0), rotate=(0.0, 0.0, -34.820))
+        cuello1(translate=(0.343, 0.053, 0.0), rotate=(0.0, 0.0, -41.078))
+        cuello2(translate=(0.521, 0.100, 0.0), rotate=(0.0, 0.0, -46.960))
+        cuello3(translate=(0.697, 0.150, 0.0), rotate=(0.0, 0.0, -47.305))
+        #Cabeza
+        cabeza(translate=(0.827, 0.205, 0.0), hocico=0.0)
+    def f36():  # carga 7/8
+        #Cuello
+        cuello0(translate=(0.211, 0.015, 0.0), rotate=(0.0, 0.0, -39.495))
+        cuello1(translate=(0.390, 0.060, 0.0), rotate=(0.0, 0.0, -46.593))
+        cuello2(translate=(0.591, 0.113, 0.0), rotate=(0.0, 0.0, -53.265))
+        cuello3(translate=(0.791, 0.170, 0.0), rotate=(0.0, 0.0, -53.656))
+        #Cabeza
+        cabeza(translate=(0.938, 0.233, 0.0), hocico=0.0)
+    def f37():  # carga 8/8 (cuello cargado)
+        #Cuello
+        cuello0(translate=(0.220, 0.016, 0.0), rotate=(0.0, 0.0, -41.268))
+        cuello1(translate=(0.407, 0.063, 0.0), rotate=(0.0, 0.0, -48.685))
+        cuello2(translate=(0.618, 0.118, 0.0), rotate=(0.0, 0.0, -55.656))
+        cuello3(translate=(0.826, 0.178, 0.0), rotate=(0.0, 0.0, -56.065))
+        #Cabeza
+        cabeza(translate=(0.980, 0.243, 0.0), hocico=0.0)
+    def f38():  # inhala: un poco más atrás que f37
+        #Cuello
+        cuello0(translate=(0.233, 0.017, 0.0), rotate=(0.0, 0.0, -43.744))
+        cuello1(translate=(0.431, 0.067, 0.0), rotate=(0.0, 0.0, -51.606))
+        cuello2(translate=(0.655, 0.125, 0.0), rotate=(0.0, 0.0, -58.995))
+        cuello3(translate=(0.876, 0.189, 0.0), rotate=(0.0, 0.0, -59.429))
+        #Cabeza
+        cabeza(translate=(1.039, 0.258, 0.0), hocico=0.0)
+
+    #---------EMBESTIDA (acelera)--------
+    def f39():  # arranca la embestida
+        #Cuello
+        cuello0(translate=(0.179, 0.014, 0.0), rotate=(0.0, 0.0, -34.995))
+        cuello1(translate=(0.329, 0.053, 0.0), rotate=(0.0, 0.0, -41.285))
+        cuello2(translate=(0.500, 0.100, 0.0), rotate=(0.0, 0.0, -47.196))
+        cuello3(translate=(0.668, 0.151, 0.0), rotate=(0.0, 0.0, -47.543))
+        #Cabeza
+        cabeza(translate=(0.791, 0.206, 0.0), hocico=0.0)
+    def f40():  # acelera
+        #Cuello
+        cuello0(translate=(0.083, 0.008, 0.0), rotate=(0.0, 0.0, -19.685))
+        cuello1(translate=(0.150, 0.030, 0.0), rotate=(0.0, 0.0, -23.223))
+        cuello2(translate=(0.229, 0.056, 0.0), rotate=(0.0, 0.0, -26.548))
+        cuello3(translate=(0.306, 0.085, 0.0), rotate=(0.0, 0.0, -26.743))
+        #Cabeza
+        cabeza(translate=(0.357, 0.116, 0.0), hocico=0.0)
+
+    #--------- ESCUPIDA (hacia adelante) ------------
+    def f41():  # cuello estirado al frente, sale la llama
+        #Cuello
+        cuello0(translate=(-0.040, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello1(translate=(-0.080, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello2(translate=(-0.120, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello3(translate=(-0.160, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        #Cabeza
+        cabeza(translate=(-0.200, 0.000, 0.0), hocico=0.0)
+    def f42():  # empuja un poco más al exhalar (se mantiene)
+        #Cuello
+        cuello0(translate=(-0.052, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello1(translate=(-0.104, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello2(translate=(-0.156, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello3(translate=(-0.208, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        #Cabeza
+        cabeza(translate=(-0.260, 0.000, 0.0), hocico=0.0)
+
+    #--------- REGRESO (suave, sin bajar el cuello) ------------
+    def f43():  # regreso 1/6
+        #Cuello
+        cuello0(translate=(-0.037, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello1(translate=(-0.074, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello2(translate=(-0.111, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello3(translate=(-0.148, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        #Cabeza
+        cabeza(translate=(-0.185, 0.000, 0.0), hocico=0.0)
+    def f44():  # regreso 2/6
+        #Cuello
+        cuello0(translate=(-0.030, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello1(translate=(-0.059, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello2(translate=(-0.089, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello3(translate=(-0.119, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        #Cabeza
+        cabeza(translate=(-0.148, 0.000, 0.0), hocico=0.0)
+    def f45():  # regreso 3/6
+        #Cuello
+        cuello0(translate=(-0.020, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello1(translate=(-0.040, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello2(translate=(-0.060, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello3(translate=(-0.080, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        #Cabeza
+        cabeza(translate=(-0.100, 0.000, 0.0), hocico=0.0)
+    def f46():  # regreso 4/6
+        #Cuello
+        cuello0(translate=(-0.010, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello1(translate=(-0.021, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello2(translate=(-0.031, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello3(translate=(-0.041, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        #Cabeza
+        cabeza(translate=(-0.052, 0.000, 0.0), hocico=0.0)
+    def f47():  # regreso 5/6
+        #Cuello
+        cuello0(translate=(-0.003, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello1(translate=(-0.006, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello2(translate=(-0.009, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        cuello3(translate=(-0.012, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
+        #Cabeza
+        cabeza(translate=(-0.015, 0.000, 0.0), hocico=0.0)
+    # después de f47 se llama f0()
+    def f48():  # 3/6
+        #Cuello
+        cuello0(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello1(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello2(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello3(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        #Cabeza
+        cabeza()
  
 
 

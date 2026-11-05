@@ -1,3 +1,4 @@
+#main.py
 # Liberias para multiplataforma (evita problemas de GLUT en Wayland)
 import os
 os.environ["PYOPENGL_PLATFORM"] = "x11"
@@ -20,6 +21,9 @@ size = (1000, 700)
 fps = 8  # Fotogramas por segundo máximos.
 titleWindows = "Windows OpenGL .GL .GLU .GLUT Goofy"
 backgraung = sysScene.paleta(0)
+camara = (0.0, 10.0, 10.0)  # Cámara fija: (giro, inclinación, distancia).
+paso = 0.2  # Cuánto se mueve todo lo que se dibuja con cada pulsación de flecha.
+pasoGiro = 5.0  # Grados que gira todo lo que se dibuja con cada pulsación de espacio.
 carpeta = os.path.dirname(os.path.abspath(__file__))  # Carpeta del proyecto.
 
 def firma():  # Fecha de la última modificación de los .py de la carpeta.
@@ -37,8 +41,8 @@ def recargar():  # Vuelve a leer los archivos del proyecto sin cerrar la ventana
             traceback.print_exc()  # Si hay un error, lo muestra y la ventana sigue abierta.
 
 def runWinodws():  # Abre la ventana y la mantiene abierta; se actualiza sola al guardar cambios.
-    giro, inclinacion, distancia = 20.0, 28.0, 5.0  # Vista: giro horizontal, inclinación vertical y lejanía.
-    cursor_x, cursor_y = 0, 0  # Última posición del ratón.
+    giro, inclinacion, distancia = camara  # Vista fija: no cambia nunca.
+    mx, mz, angulo = 0.0, 0.0, 0.0  # Cuánto se movió (flechas) y giró (espacio) todo lo que se dibuja.
     ultima = firma()  # Última modificación vista.
 
     def renderScene():  # Dibuja la escena.
@@ -48,6 +52,8 @@ def runWinodws():  # Abre la ventana y la mantiene abierta; se actualiza sola al
         glRotatef(inclinacion, 1.0, 0.0, 0.0)  # Gira la escena verticalmente.
         glRotatef(giro, 0.0, 1.0, 0.0)  # Gira la escena horizontalmente.
         glTranslatef(0.0, -0.46, 0.0)  # Baja el punto central.
+        glTranslatef(mx, 0.0, mz)  # Mueve todo lo que se dibuja (flechas).
+        glRotatef(angulo, 0.0, 1.0, 0.0)  # Gira todo lo que se dibuja sobre sí mismo (espacio).
         scene.drawingScene()  # Dibuja las figuras (draw.py).
         glutSwapBuffers()  # Muestra lo dibujado.
 
@@ -59,20 +65,21 @@ def runWinodws():  # Abre la ventana y la mantiene abierta; se actualiza sola al
         gluPerspective(60.0, ancho / alto, 0.1, 100.0)  # Proporción real: los modelos no se deforman.
         glMatrixMode(GL_MODELVIEW)  # Regresa al modo de posicionamiento de figuras.
 
-    def maus(button, accion, x, y):  # Clics y rueda del ratón.
-        nonlocal distancia, cursor_x, cursor_y  # Permite modificar las variables de runWinodws.
-        if accion == GLUT_DOWN:  # Si se presionó un botón.
-            cursor_x, cursor_y = x, y  # Guarda dónde empezó el arrastre.
-            if button == 3:  # Rueda hacia arriba.
-                distancia *= 0.92  # Acerca la cámara.
-            elif button == 4:  # Rueda hacia abajo.
-                distancia *= 1.08  # Aleja la cámara.
+    def teclas(tecla, x, y):  # Teclas normales.
+        nonlocal angulo  # Permite modificar el giro.
+        if tecla == b' ':  # Espacio.
+            angulo += pasoGiro  # Gira todo lo que se dibuja (si se mantiene presionada, sigue girando).
 
-    def move_maus(x, y):  # Arrastre del ratón.
-        nonlocal giro, inclinacion, cursor_x, cursor_y  # Permite modificar las variables de runWinodws.
-        giro += (x - cursor_x) * 0.4  # Gira según el movimiento horizontal.
-        inclinacion += (y - cursor_y) * 0.4  # Inclina según el movimiento vertical.
-        cursor_x, cursor_y = x, y  # Guarda la nueva posición.
+    def flechas(tecla, x, y):  # Teclas de flechas.
+        nonlocal mx, mz  # Permite modificar la posición.
+        if tecla == GLUT_KEY_LEFT:  # Flecha izquierda.
+            mx -= paso  # Mueve todo a la izquierda.
+        elif tecla == GLUT_KEY_RIGHT:  # Flecha derecha.
+            mx += paso  # Mueve todo a la derecha.
+        elif tecla == GLUT_KEY_UP:  # Flecha arriba.
+            mz -= paso  # Mueve todo hacia el fondo (se aleja).
+        elif tecla == GLUT_KEY_DOWN:  # Flecha abajo.
+            mz += paso  # Mueve todo hacia la cámara (se acerca).
 
     def tick(valor):  # Se ejecuta "fps" veces por segundo: revisa cambios y pide un fotograma.
         nonlocal ultima  # Permite modificar la última modificación vista.
@@ -91,27 +98,18 @@ def runWinodws():  # Abre la ventana y la mantiene abierta; se actualiza sola al
     glEnable(GL_DEPTH_TEST)  # Las figuras de adelante tapan a las de atrás.
     glutDisplayFunc(renderScene)  # Función que dibuja.
     glutReshapeFunc(adjustWindows)  # Función que se ejecuta al cambiar el tamaño.
-    glutMouseFunc(maus)  # Función de clics y rueda.
-    glutMotionFunc(move_maus)  # Función de arrastre.
+    glutKeyboardFunc(teclas)  # Función de teclas normales (espacio).
+    glutSpecialFunc(flechas)  # Función de teclas de flechas.
     glutTimerFunc(1000 // fps, tick, 0)  # Inicia el ciclo de fotogramas.
     glutMainLoop()  # Mantiene la ventana abierta.
 
 def main():
     # Inicializa música de fondo (una sola vez, no se reinicia al recargar)
-    # audio.backgroundMusic(path="Americano.mp3", volumen=0.5)
+    audio.backgroundMusic(path="C418 - Minecraft - Minecraft Volume Alpha.mp3", volumen=1)
     runWinodws()  # Abre la ventana.
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
 
 
 
