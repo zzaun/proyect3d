@@ -106,7 +106,9 @@ def month(): #Mesa
     meshQuad.disk(name="Agua", radio_exterior=.6, rotate=convert.degrees(-90,0,0),translate=(-3.3, 1.65,0), color=paleta("AZUL"))
 
 def drawingScene():
+    # Ilumuniacion
     light.sun()
+    light.lightPoint(translate=(-5,2,0), power=10, color=paleta("AZUL"))
     #   Sistemas generales
     sysScene.ejes(visibleMallas=True, visibleEjes=True)
     #   Aqui se dibuja todo lo que no se va animar 

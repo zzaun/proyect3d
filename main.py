@@ -25,6 +25,7 @@ camara = (0.0, 10.0, 10.0)  # Cámara fija: (giro, inclinación, distancia).
 paso = 0.2  # Cuánto se mueve todo lo que se dibuja con cada pulsación de flecha.
 pasoGiro = 5.0  # Grados que gira todo lo que se dibuja con cada pulsación de espacio.
 carpeta = os.path.dirname(os.path.abspath(__file__))  # Carpeta del proyecto.
+sentido = (-1, -1)  # Sentido de las flechas (izquierda/derecha, arriba/abajo): 1 o -1; cambia el signo de un eje para invertirlo.
 
 def firma():  # Fecha de la última modificación de los .py de la carpeta.
     return max(os.path.getmtime(os.path.join(carpeta, f)) for f in os.listdir(carpeta) if f.endswith(".py"))
@@ -73,13 +74,13 @@ def runWinodws():  # Abre la ventana y la mantiene abierta; se actualiza sola al
     def flechas(tecla, x, y):  # Teclas de flechas.
         nonlocal mx, mz  # Permite modificar la posición.
         if tecla == GLUT_KEY_LEFT:  # Flecha izquierda.
-            mx -= paso  # Mueve todo a la izquierda.
+            mx -= paso * sentido[0]  # Mueve todo en X.
         elif tecla == GLUT_KEY_RIGHT:  # Flecha derecha.
-            mx += paso  # Mueve todo a la derecha.
+            mx += paso * sentido[0]  # Mueve todo en X.
         elif tecla == GLUT_KEY_UP:  # Flecha arriba.
-            mz -= paso  # Mueve todo hacia el fondo (se aleja).
+            mz -= paso * sentido[1]  # Mueve todo en profundidad.
         elif tecla == GLUT_KEY_DOWN:  # Flecha abajo.
-            mz += paso  # Mueve todo hacia la cámara (se acerca).
+            mz += paso * sentido[1]  # Mueve todo en profundidad.
 
     def tick(valor):  # Se ejecuta "fps" veces por segundo: revisa cambios y pide un fotograma.
         nonlocal ultima  # Permite modificar la última modificación vista.

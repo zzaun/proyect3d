@@ -427,6 +427,8 @@ class audio:
 
 # Ilumuniacion
 class light:
+    _luces = {}  # name -> número de luz de OpenGL que usa cada luz puntual (GL_LIGHT1 a GL_LIGHT7; la 0 es el sol).
+
     @staticmethod  # Se llama directo desde la clase: light.sun(...).
     def sun(color=(1.0, 0.95, 0.8), ambient=(0.25, 0.25, 0.30), direction=(1.0, 2.0, 1.5), visible=True):  # color = luz directa (R,G,B), ambient = luz base (R,G,B), direction = hacia dónde está el sol (x,y,z), visible = enciende o apaga el sol.
         if not visible:  # Revisa si el sol está apagado.
@@ -439,6 +441,31 @@ class light:
         glEnable(GL_NORMALIZE)  # Corrige las normales cuando usas glScalef.
         glLightfv(GL_LIGHT0, GL_DIFFUSE, (*color, 1.0))  # Luz directa; el 1.0 es la opacidad.
         glLightfv(GL_LIGHT0, GL_AMBIENT, (*ambient, 1.0))  # Luz base: evita caras totalmente negras.
+
+    @staticmethod  # Se llama directo desde la clase: light.lightPoint(...).
+    def lightPoint(power=1.0, color=(1.0, 1.0, 1.0), translate=(0.0, 5.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), name="lightPoint", visible=True):  # Foco puntual (como un foco o una vela); power = intensidad, color = (R,G,B), translate = posición (x,y,z), rotate = (ángulo,x,y,z) gira la posición alrededor del centro de la escena, name = nombre (cada foco necesita uno distinto), visible = enciende o apaga el foco.
+        if name not in light._luces:  # Si es la primera vez que se usa este nombre.
+            if len(light._luces) >= 7:  # OpenGL solo tiene 8 luces (la 0 es el sol).
+                print("lightPoint: ya hay 7 focos, '" + name + "' no se dibuja.")  # Avisa cuál se quedó sin luz.
+                return  # No hace nada.
+            light._luces[name] = GL_LIGHT0 + 1 + len(light._luces)  # Le asigna la siguiente luz libre.
+        luz = light._luces[name]  # Número de luz de este foco.
+        if not visible:  # Revisa si el foco está apagado.
+            glDisable(luz)  # Apaga solo este foco.
+            return  # Sale sin configurar nada más.
+        glEnable(GL_LIGHTING)  # Activa el sistema de iluminación (por si no hay sol).
+        glEnable(GL_COLOR_MATERIAL)  # Hace que glColor3f siga funcionando con luz.
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)  # El color de glColor3f se usa como color del material.
+        glEnable(GL_NORMALIZE)  # Corrige las normales cuando usas glScalef.
+        glEnable(luz)  # Enciende este foco.
+        glLightfv(luz, GL_DIFFUSE, (color[0] * power, color[1] * power, color[2] * power, 1.0))  # Color de la luz multiplicado por la intensidad.
+        glLightf(luz, GL_CONSTANT_ATTENUATION, 1.0)  # Atenuación: la luz pierde fuerza con la distancia...
+        glLightf(luz, GL_LINEAR_ATTENUATION, 0.0)  # ...sin parte lineal...
+        glLightf(luz, GL_QUADRATIC_ATTENUATION, 0.01)  # ...y con parte cuadrática (a 10 de distancia queda a la mitad).
+        glPushMatrix()  # Guarda la posición, giro y escala actuales.
+        glRotatef(*rotate)  # Gira la posición del foco alrededor del centro de la escena.
+        glLightfv(luz, GL_POSITION, (*translate, 1.0))  # Posición del foco; el 1.0 final lo hace puntual (con 0.0 sería el sol).
+        glPopMatrix()  # Restaura lo guardado, para que no afecte a las demás figuras.
 
 class sysScene:
     def paleta(color=0):
