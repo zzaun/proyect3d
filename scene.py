@@ -90,7 +90,7 @@ def LLAMA(translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0,
     mesh.sphere(color=paleta("BEIGE"), translate=(-0.7, 1.40, -0.5), scale=(0.26, 0.46, 0.22), name="DI Rodilla")
     mesh.cone(color=paleta("BEIGE"), translate=(-0.7, 0.75, -0.5), rotate=(90,1,0,0), scale=(0.14, 0.14, 0.50), name="DI Tubo 2")
     mesh.sphere(color=paleta("BEIGE"), translate=(-0.7, 0.75, -0.5), scale=(0.15, 0.15, 0.15), name="DI Tobillo")
-    mesh.sphere(color=paleta("BEIGE"), translate=(-0.7, 0.1, -0.5), scale=(0.12, 0.12, 0.12), name="DI Pie Esferico")
+    mesh.sphere(color=paleta("CAFE_OSCURO"), translate=(-0.7, 0.1, -0.5), scale=(0.17, 0.2, 0.17), name="DI Pie Esferico")
 
     # PATA DELANTERA DERECHA
     mesh.sphere(color=paleta("BEIGE"), translate=(-0.7, 1.8, 0.45), rotate=(-5,1,0,0), scale=(0.32, 0.55, 0.26), name="DD Hombro")
@@ -98,7 +98,7 @@ def LLAMA(translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0,
     mesh.sphere(color=paleta("BEIGE"), translate=(-0.7, 1.40, 0.5), scale=(0.26, 0.46, 0.22), name="DD Rodilla")
     mesh.cone(color=paleta("BEIGE"), translate=(-0.7, 0.77, 0.5), rotate=(90,1,0,0), scale=(0.14, 0.14, 0.50), name="DD Tubo 2")
     mesh.sphere(color=paleta("BEIGE"), translate=(-0.7, 0.75, 0.5), scale=(0.15, 0.15, 0.15), name="DD Tobillo")
-    mesh.sphere(color=paleta("BEIGE"), translate=(-0.7, 0.1, 0.5), scale=(0.18, 0.12, 0.20), name="DD Pie Esferico")
+    mesh.sphere(color=paleta("CAFE_OSCURO"), translate=(-0.7, 0.1, 0.5), scale=(0.17, 0.2, 0.17), name="DI Pie Esferico")
 
     # PATA TRASERA IZQUIERDA
     mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 1.8, 0.35), rotate=(345,0,0,1), scale=(0.42, 0.75, 0.28), name="TI Muslo Esponjoso")
@@ -106,7 +106,7 @@ def LLAMA(translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0,
     mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 1.40, 0.35), scale=(0.40, 0.40, 0.24), name="TI Rodilla")
     mesh.cone(color=paleta("BEIGE"), translate=(0.9, 0.60, 0.35), rotate=(90,1,0,0), scale=(0.15, 0.10, 0.30), name="TI Tubo 2")
     mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 0.65, 0.35), scale=(0.15, 0.15, 0.10), name="TI Tobillo")
-    mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 0.1, 0.35), scale=(0.18, 0.12, 0.20), name="TI Pie Esferico")
+    mesh.sphere(color=paleta("CAFE_OSCURO"), translate=(0.9, 0.1, 0.35), scale=(0.17, 0.2, 0.17), name="DI Pie Esferico")
 
     # PATA TRASERA DERECHA
     mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 1.8, -0.35), rotate=(345,0,0,1), scale=(0.42, 0.75, 0.28), name="TD Muslo Esponjoso")
@@ -114,7 +114,8 @@ def LLAMA(translate=(0.0, 0.0, 0.0), rotate=(0, 0.0, 1.0, 0.0), scale=(1.0, 1.0,
     mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 1.40, -0.35), scale=(0.40, 0.40, 0.24), name="TD Rodilla")
     mesh.cone(color=paleta("BEIGE"), translate=(0.9, 0.60, -0.35), rotate=(90,1,0,0), scale=(0.15, 0.10, 0.30), name="TD Tubo 2")
     mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 0.65, -0.35), scale=(0.15, 0.15, 0.10), name="TD Tobillo")
-    mesh.sphere(color=paleta("BEIGE"), translate=(0.9, 0.1, -0.35), scale=(0.18, 0.12, 0.20), name="TD Pie Esferico")
+    mesh.sphere(color=paleta("CAFE_OSCURO"), translate=(0.9, 0.1, -0.35), scale=(0.17, 0.2, 0.17), name="DI Pie Esferico")
+    
     #Sombra
     meshQuad.disk(name="Sombra", scale=(2,1,1), rotate=convert.degrees(-90,0,0), translate=(0.5, 0.1, 0), color=paleta("VERDE_OSCURO"))
     glPopMatrix()
@@ -312,41 +313,41 @@ class fotogramas:
         cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
         #Cabeza
         cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
-    
+
     #--------BEBIENDO AGUA---------
     def f13():  # Final
-            #Cuello
-            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
-            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
-            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
-            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
-            #Cabeza
-            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+        #Cuello
+        cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+        cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+        cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+        cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+        #Cabeza
+        cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
     def f14():  # Final
-            #Cuello
-            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
-            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
-            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
-            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
-            #Cabeza
-            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+        #Cuello
+        cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+        cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+        cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+        cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+        #Cabeza
+        cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
     def f15():  # Final
-            #Cuello
-            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
-            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
-            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
-            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
-            #Cabeza
-            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+        #Cuello
+        cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+        cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+        cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+        cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+        #Cabeza
+        cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
     def f16():  # Final
-            #Cuello
-            cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
-            cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
-            cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
-            cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
-            #Cabeza
-            cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
-    
+        #Cuello
+        cuello0(translate=(-0.33, -0.12, 0.0), rotate=(0.0, 0.0, 57.009))
+        cuello1(translate=(-0.637, -0.444, 0.0), rotate=(0.0, 0.0, 67.81))
+        cuello2(translate=(-0.958, -0.845, 0.0), rotate=(0.0, 0.0, 78.141))
+        cuello3(translate=(-1.253, -1.299, 0.0), rotate=(0.0, 0.0, 81.755))
+        #Cabeza
+        cabeza(translate=(-1.47, -1.82, 0.0), hocico=45.0)
+
     #---------HACIA ATRAS----------
     def f17():  # Final (antes f12)
         # Cuello*
@@ -453,7 +454,7 @@ class fotogramas:
         # Cabeza*
         cabeza()
 
-        #---------CARGA (hacia atrás, arranca lento y acelera)----------
+    #---------CARGA (hacia atrás, arranca lento y acelera)----------
     def f30():  # carga 1/8
         #Cuello
         cuello0(translate=(0.009, 0.001, 0.0), rotate=(0.0, 0.0, -1.773))
@@ -546,6 +547,8 @@ class fotogramas:
         cabeza(translate=(0.357, 0.116, 0.0), hocico=0.0)
 
     #--------- ESCUPIDA (hacia adelante) ------------
+    # El proyectil avanza 3 m en X (de -2.3 a -5.3), 0.375 por fotograma.
+    # La luz azul va siempre 0.1 detrás del proyectil (x + 0.1).
     def f41():  # cuello estirado al frente, sale la llama
         #Cuello
         cuello0(translate=(-0.040, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
@@ -554,6 +557,9 @@ class fotogramas:
         cuello3(translate=(-0.160, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
         #Cabeza
         cabeza(translate=(-0.200, 0.000, 0.0), hocico=0.0)
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-2.300, 3.8, 0))
+        light.lightPoint(translate=(-2.200, 3.8, 0), power=1, color=paleta("AZUL"))
     def f42():  # empuja un poco más al exhalar (se mantiene)
         #Cuello
         cuello0(translate=(-0.052, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
@@ -562,6 +568,9 @@ class fotogramas:
         cuello3(translate=(-0.208, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
         #Cabeza
         cabeza(translate=(-0.260, 0.000, 0.0), hocico=0.0)
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-2.675, 3.8, 0))
+        light.lightPoint(translate=(-2.575, 3.8, 0), power=1, color=paleta("AZUL"))
 
     #--------- REGRESO (suave, sin bajar el cuello) ------------
     def f43():  # regreso 1/6
@@ -572,6 +581,9 @@ class fotogramas:
         cuello3(translate=(-0.148, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
         #Cabeza
         cabeza(translate=(-0.185, 0.000, 0.0), hocico=0.0)
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-3.050, 3.8, 0))
+        light.lightPoint(translate=(-2.950, 3.8, 0), power=1, color=paleta("AZUL"))
     def f44():  # regreso 2/6
         #Cuello
         cuello0(translate=(-0.030, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
@@ -580,6 +592,9 @@ class fotogramas:
         cuello3(translate=(-0.119, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
         #Cabeza
         cabeza(translate=(-0.148, 0.000, 0.0), hocico=0.0)
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-3.425, 3.8, 0))
+        light.lightPoint(translate=(-3.325, 3.8, 0), power=1, color=paleta("AZUL"))
     def f45():  # regreso 3/6
         #Cuello
         cuello0(translate=(-0.020, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
@@ -588,6 +603,9 @@ class fotogramas:
         cuello3(translate=(-0.080, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
         #Cabeza
         cabeza(translate=(-0.100, 0.000, 0.0), hocico=0.0)
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-3.800, 3.8, 0))
+        light.lightPoint(translate=(-3.700, 3.8, 0), power=1, color=paleta("AZUL"))
     def f46():  # regreso 4/6
         #Cuello
         cuello0(translate=(-0.010, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
@@ -596,6 +614,9 @@ class fotogramas:
         cuello3(translate=(-0.041, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
         #Cabeza
         cabeza(translate=(-0.052, 0.000, 0.0), hocico=0.0)
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-4.175, 3.8, 0))
+        light.lightPoint(translate=(-4.075, 3.8, 0), power=1, color=paleta("AZUL"))
     def f47():  # regreso 5/6
         #Cuello
         cuello0(translate=(-0.003, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
@@ -604,6 +625,9 @@ class fotogramas:
         cuello3(translate=(-0.012, 0.000, 0.0), rotate=(0.0, 0.0, 0.000))
         #Cabeza
         cabeza(translate=(-0.015, 0.000, 0.0), hocico=0.0)
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-4.550, 3.8, 0))
+        light.lightPoint(translate=(-4.450, 3.8, 0), power=1, color=paleta("AZUL"))
     # después de f47 se llama f0()
     def f48():  # 3/6
         #Cuello
@@ -613,9 +637,20 @@ class fotogramas:
         cuello3(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
         #Cabeza
         cabeza()
- 
-
-
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-4.925, 3.8, 0))
+        light.lightPoint(translate=(-4.825, 3.8, 0), power=1, color=paleta("AZUL"))
+    def f49():
+        #Cuello
+        cuello0(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello1(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello2(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        cuello3(translate=(-0.0, 0.0, 0.0), rotate=(-0.0, 0.0, 0.0))
+        #Cabeza
+        cabeza()
+        #Proyectil
+        mesh.sphere(name="Escupitajo", scale=(0.1, 0.1, 0.1), translate=(-5.300, 3.8, 0))
+        light.lightPoint(translate=(-5.200, 3.8, 0), power=1, color=paleta("AZUL"))
 
 
 def cuello0(rotate=(0, 0, 0), translate=(0, 0, 0)):  # Ambos en orden (x, arriba, fondo).
